@@ -3,7 +3,7 @@ import hashlib
 import sys
 
 def request_api_data(query_char):
-	url = 'https://api.pwnedpasswords.com/range/' + query_char
+	url = 'https://api.pwnedpasswords.com/range/' + query_char # query returns full length hashed matching the first 5 characters
 	res = requests.get(url)
 	if res.status_code != 200:
 		raise RuntimeError(f'Error fetching: {res.status_code} check the API and try again')
@@ -11,8 +11,8 @@ def request_api_data(query_char):
 
 def get_password_leaks_count(hashes, hash_to_check):
 	hashes = (line.split(':') for line in hashes.text.splitlines())
-	for h, count in hashes:
-		if h == hash_to_check:
+	for returned_hash, count in hashes:
+		if returned_hash == hash_to_check:
 			return count
 	return 0
 
@@ -33,4 +33,4 @@ def main(args):
 			print(f'{password} was NOT found, Carry on!')
 
 if __name__ == '__main__':
-	sys.exit(main(sys.argv[1:]))
+	sys.exit(main(sys.argv[1:])) #runs the script for each password provided in the command line after the file name, spearated by "space"
